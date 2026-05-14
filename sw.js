@@ -2,21 +2,22 @@
 // THE BROOM — sw.js
 // Conservative strategy: cache static assets only
 // API calls always go network-first (no stale data risk)
-// Scope: /broom/ (GitHub Pages subdirectory)
+// Works on any domain / subdirectory (paths are relative to SW scope)
 // ============================================================
 
-const CACHE_NAME = 'thebroom-v1';
+const CACHE_NAME = 'thebroom-v2';
 
-const STATIC_ASSETS = [
-  '/broom/',
-  '/broom/index.html',
-  '/broom/styles.css',
-  '/broom/icons.js',
-  '/broom/db.js',
-  '/broom/api.js',
-  '/broom/ui.js',
-  '/broom/app.js',
-  '/broom/manifest.json'
+// self.registration.scope gives the full URL of the scope
+// We build asset URLs relative to it so this works on any host/path
+const STATIC_FILES = [
+  'index.html',
+  'styles.css',
+  'icons.js',
+  'db.js',
+  'api.js',
+  'ui.js',
+  'app.js',
+  'manifest.json'
 ];
 
 // ============================================================
@@ -25,9 +26,10 @@ const STATIC_ASSETS = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache => {
+      const base = self.registration.scope;
+      return cache.addAll(STATIC_FILES.map(f => base + f));
+    }).then(() => self.skipWaiting())
   );
 });
 
@@ -75,7 +77,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Static assets → cache-first
+  // Same-origin static assets → cache-first, fallback to network
   if (request.method === 'GET' && url.origin === self.location.origin) {
     event.respondWith(
       caches.match(request).then(cached => {
@@ -87,7 +89,7 @@ self.addEventListener('fetch', event => {
           }
           return res;
         });
-      }).catch(() => caches.match('/broom/index.html'))
+      }).catch(() => caches.match(self.registration.scope + 'index.html'))
     );
     return;
   }
@@ -95,3 +97,4 @@ self.addEventListener('fetch', event => {
   // Everything else → network passthrough
   event.respondWith(fetch(request));
 });
+

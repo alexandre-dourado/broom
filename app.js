@@ -171,7 +171,8 @@ async function archiveItem(id) {
 async function unarchiveItem(id) {
   await updateItem(id, { archived: false });
   if (STATE.online) {
-    apiUpdateItem(await getItemLocal(id)).catch(() => enqueueOperation('updateItem', await getItemLocal(id)));
+    const item = await getItemLocal(id);
+    apiUpdateItem(item).catch(() => enqueueOperation('updateItem', item));
   }
 }
 
@@ -446,7 +447,7 @@ async function handleInstantSave() {
 
 function registerSW() {
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/broom/sw.js', { scope: '/broom/' })
+    navigator.serviceWorker.register('./sw.js')
       .then(reg => console.log('[SW] Registered:', reg.scope))
       .catch(err => console.warn('[SW] Registration failed:', err));
   }

@@ -310,7 +310,7 @@ const UI = {
       <input id="cat-form-name"  type="text"  placeholder="Nome" value="${cat ? escapeHTML(cat.name) : ''}" maxlength="30">
       <input id="cat-form-color" type="color" value="${cat?.color || '#888888'}">
       <select id="cat-form-icon">
-        ${Object.keys(ICONS).filter(k => !['plus','search','grid','list','masonry','zoom-in','zoom-out','settings','archive','trash','edit','close','sun','moon','sync','filter','unarchive'].includes(k)).map(k => `
+        ${CATEGORY_ICON_KEYS.map(k => `
           <option value="${k}" ${cat?.icon === k ? 'selected' : ''}>${k}</option>
         `).join('')}
       </select>

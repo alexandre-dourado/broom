@@ -138,3 +138,8 @@ function getIcon(name, size = 16) {
   const svg = ICONS[name] || ICONS['circle'];
   return svg.replace('<svg ', `<svg width="${size}" height="${size}" `);
 }
+
+// Icon keys available for category assignment
+const CATEGORY_ICON_KEYS = [
+  'health-council', 'robot', 'rootz', 'phi', 'mortarboard', 'ecg', 'money', 'circle'
+];
