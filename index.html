@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="The Broom — captura mental rápida e declutter">
+  <meta name="theme-color" content="#0a0a0a" id="meta-theme">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="The Broom">
+
+  <title>The Broom</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- ========================================================
+       TOPBAR
+       ======================================================== -->
+  <header class="topbar">
+
+    <div class="topbar-brand">
+      The Broom<span> /</span>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">
+        <!-- injected by JS: getIcon('search', 16) -->
+      </span>
+      <input type="text" id="search" placeholder="Buscar..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="topbar-actions">
+
+      <!-- View -->
+      <button class="icon-btn active" id="btn-view-grid"    title="Grid"><!-- grid --></button>
+      <button class="icon-btn"        id="btn-view-list"    title="Lista"><!-- list --></button>
+      <button class="icon-btn"        id="btn-view-masonry" title="Masonry"><!-- masonry --></button>
+
+      <div class="topbar-divider"></div>
+
+      <!-- Zoom -->
+      <button class="icon-btn" id="btn-zoom-out" title="Menos colunas"><!-- zoom-out --></button>
+      <button class="icon-btn" id="btn-zoom-in"  title="Mais colunas"><!-- zoom-in --></button>
+
+      <div class="topbar-divider"></div>
+
+      <!-- Archived toggle -->
+      <button class="icon-btn" id="btn-archived" title="Arquivados"><!-- archive --></button>
+
+      <!-- Sync -->
+      <button class="icon-btn" id="btn-sync" title="Sincronizar" style="position:relative">
+        <!-- sync -->
+        <span class="sync-dot online" id="sync-dot"></span>
+      </button>
+
+      <!-- Theme -->
+      <button class="icon-btn" id="btn-theme" title="Alternar tema"><!-- sun/moon --></button>
+
+      <!-- Settings -->
+      <button class="icon-btn" id="btn-settings" title="Configurações"><!-- settings --></button>
+
+    </div>
+  </header>
+
+  <!-- ========================================================
+       FILTER BAR
+       ======================================================== -->
+  <nav class="filterbar" id="filter-bar">
+    <!-- rendered by UI.renderCategoryFilters() -->
+  </nav>
+
+  <!-- ========================================================
+       MAIN GRID
+       ======================================================== -->
+  <main class="main-content">
+    <div id="grid" data-view="grid" data-zoom="3">
+      <!-- rendered by UI.renderGrid() -->
+    </div>
+  </main>
+
+  <!-- ========================================================
+       FAB
+       ======================================================== -->
+  <button id="fab" aria-label="Adicionar item">
+    <!-- injected by JS -->
+  </button>
+
+  <!-- ========================================================
+       INSTANT CAPTURE
+       ======================================================== -->
+  <div id="instant-capture" role="dialog" aria-label="Captura rápida">
+    <input type="text" id="instant-input" placeholder="Capturar pensamento..." autocomplete="off" maxlength="200">
+    <button id="instant-save">OK</button>
+  </div>
+
+  <!-- ========================================================
+       MODAL — ADD / EDIT
+       ======================================================== -->
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+    <div class="modal">
+
+      <div class="modal-header">
+        <span id="modal-heading">Novo item</span>
+        <button class="icon-btn" id="modal-close" aria-label="Fechar"><!-- close --></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="field-group">
+          <div class="field-label">Título</div>
+          <input
+            type="text"
+            id="modal-title"
+            placeholder="Título do item"
+            autocomplete="off"
+            maxlength="120"
+          >
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Descrição</div>
+          <textarea
+            id="modal-description"
+            placeholder="Detalhe, contexto, links..."
+            rows="5"
+          ></textarea>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Categoria</div>
+          <select id="modal-category">
+            <!-- populated by UI.openModal() -->
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <div class="modal-footer-left">
+          <button class="btn-ghost" id="modal-archive"><!-- archive --> Arquivar</button>
+          <button class="btn-danger" id="modal-delete"><!-- trash --> Excluir</button>
+        </div>
+        <button class="btn-primary" id="modal-save">Salvar</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SETTINGS PANEL
+       ======================================================== -->
+  <div id="settings-overlay" role="dialog" aria-modal="true" aria-label="Configurações">
+    <div class="settings-panel">
+
+      <div class="settings-header">
+        <span class="settings-title">Configurações</span>
+        <button class="icon-btn" id="settings-close" aria-label="Fechar"><!-- close --></button>
+      </div>
+
+      <!-- Aparência -->
+      <section class="settings-section">
+        <div class="settings-section-title">Aparência</div>
+
+        <div class="settings-row">
+          <label for="settings-theme">Tema</label>
+          <select id="settings-theme">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
+
+        <div class="settings-row">
+          <label for="settings-default-view">Visualização padrão</label>
+          <select id="settings-default-view">
+            <option value="grid">Grid</option>
+            <option value="list">Lista</option>
+            <option value="masonry">Masonry</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Comportamento -->
+      <section class="settings-section">
+        <div class="settings-section-title">Comportamento</div>
+
+        <div class="settings-row">
+          <label for="settings-fab">Botão "+"</label>
+          <select id="settings-fab">
+            <option value="modal">Modal completo</option>
+            <option value="instant">Captura rápida</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Categorias -->
+      <section class="settings-section">
+        <div class="settings-section-title">Categorias</div>
+        <div class="category-list" id="category-list">
+          <!-- rendered by UI.renderCategoryManager() -->
+        </div>
+        <button class="btn-ghost" id="btn-add-category" style="margin-top:8px;width:100%;justify-content:center">
+          + Nova categoria
+        </button>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       SCRIPTS
+       ======================================================== -->
+  <script src="icons.js"></script>
+  <script src="db.js"></script>
+  <script src="api.js"></script>
+  <script src="ui.js"></script>
+  <script src="app.js"></script>
+
+  <!-- Inject icons into static HTML elements after scripts load -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Search icon
+      document.querySelector('.search-icon').innerHTML = getIcon('search', 16);
+
+      // FAB
+      document.getElementById('fab').innerHTML = getIcon('plus', 24);
+
+      // Topbar buttons
+      document.getElementById('btn-view-grid').innerHTML    = getIcon('grid', 18);
+      document.getElementById('btn-view-list').innerHTML    = getIcon('list', 18);
+      document.getElementById('btn-view-masonry').innerHTML = getIcon('masonry', 18);
+      document.getElementById('btn-zoom-out').innerHTML     = getIcon('zoom-out', 18);
+      document.getElementById('btn-zoom-in').innerHTML      = getIcon('zoom-in', 18);
+      document.getElementById('btn-archived').innerHTML     = getIcon('archive', 18);
+      document.getElementById('btn-sync').innerHTML        += getIcon('sync', 18);
+      document.getElementById('btn-theme').innerHTML        = getIcon('sun', 18);
+      document.getElementById('btn-settings').innerHTML     = getIcon('settings', 18);
+
+      // Modal / settings close buttons
+      document.getElementById('modal-close').innerHTML    = getIcon('close', 18);
+      document.getElementById('settings-close').innerHTML = getIcon('close', 18);
+    });
+  </script>
+
+</body>
+</html>
