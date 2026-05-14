@@ -28,41 +28,40 @@
     </div>
 
     <div class="search-wrap">
-      <span class="search-icon">
-        <!-- injected by JS: getIcon('search', 16) -->
-      </span>
+      <span class="search-icon"></span>
       <input type="text" id="search" placeholder="Buscar..." autocomplete="off" spellcheck="false">
     </div>
 
     <div class="topbar-actions">
 
       <!-- View -->
-      <button class="icon-btn active" id="btn-view-grid"    title="Grid"><!-- grid --></button>
-      <button class="icon-btn"        id="btn-view-list"    title="Lista"><!-- list --></button>
-      <button class="icon-btn"        id="btn-view-masonry" title="Masonry"><!-- masonry --></button>
+      <button class="icon-btn active" id="btn-view-grid"    title="Grid"></button>
+      <button class="icon-btn"        id="btn-view-list"    title="Lista"></button>
+      <button class="icon-btn"        id="btn-view-masonry" title="Masonry"></button>
+      <button class="icon-btn"        id="btn-view-panorama" title="Panorama"></button>
 
       <div class="topbar-divider"></div>
 
       <!-- Zoom -->
-      <button class="icon-btn" id="btn-zoom-out" title="Menos colunas"><!-- zoom-out --></button>
-      <button class="icon-btn" id="btn-zoom-in"  title="Mais colunas"><!-- zoom-in --></button>
+      <button class="icon-btn" id="btn-zoom-out" title="Menos colunas"></button>
+      <button class="icon-btn" id="btn-zoom-in"  title="Mais colunas"></button>
 
       <div class="topbar-divider"></div>
 
       <!-- Archived toggle -->
-      <button class="icon-btn" id="btn-archived" title="Arquivados"><!-- archive --></button>
+      <button class="icon-btn" id="btn-archived" title="Arquivados"></button>
 
       <!-- Sync -->
       <button class="icon-btn" id="btn-sync" title="Sincronizar" style="position:relative">
-        <span id="btn-sync-icon"><!-- sync --></span>
+        <span id="btn-sync-icon"></span>
         <span class="sync-dot online" id="sync-dot"></span>
       </button>
 
       <!-- Theme -->
-      <button class="icon-btn" id="btn-theme" title="Alternar tema"><!-- sun/moon --></button>
+      <button class="icon-btn" id="btn-theme" title="Alternar tema"></button>
 
       <!-- Settings -->
-      <button class="icon-btn" id="btn-settings" title="Configurações"><!-- settings --></button>
+      <button class="icon-btn" id="btn-settings" title="Configurações"></button>
 
     </div>
   </header>
@@ -70,25 +69,19 @@
   <!-- ========================================================
        FILTER BAR
        ======================================================== -->
-  <nav class="filterbar" id="filter-bar">
-    <!-- rendered by UI.renderCategoryFilters() -->
-  </nav>
+  <nav class="filterbar" id="filter-bar"></nav>
 
   <!-- ========================================================
        MAIN GRID
        ======================================================== -->
   <main class="main-content">
-    <div id="grid" data-view="grid" data-zoom="3">
-      <!-- rendered by UI.renderGrid() -->
-    </div>
+    <div id="grid" data-view="grid" data-zoom="3"></div>
   </main>
 
   <!-- ========================================================
        FAB
        ======================================================== -->
-  <button id="fab" aria-label="Adicionar item">
-    <!-- injected by JS -->
-  </button>
+  <button id="fab" aria-label="Adicionar item"></button>
 
   <!-- ========================================================
        INSTANT CAPTURE
@@ -106,44 +99,33 @@
 
       <div class="modal-header">
         <span id="modal-heading">Novo item</span>
-        <button class="icon-btn" id="modal-close" aria-label="Fechar"><!-- close --></button>
+        <button class="icon-btn" id="modal-close" aria-label="Fechar"></button>
       </div>
 
       <div class="modal-body">
 
         <div class="field-group">
           <div class="field-label">Título</div>
-          <input
-            type="text"
-            id="modal-title"
-            placeholder="Título do item"
-            autocomplete="off"
-            maxlength="120"
-          >
+          <input type="text" id="modal-title" placeholder="Título do item"
+            autocomplete="off" maxlength="120">
         </div>
 
         <div class="field-group">
           <div class="field-label">Descrição</div>
-          <textarea
-            id="modal-description"
-            placeholder="Detalhe, contexto, links..."
-            rows="5"
-          ></textarea>
+          <textarea id="modal-description" placeholder="Detalhe, contexto, links..." rows="5"></textarea>
         </div>
 
         <div class="field-group">
           <div class="field-label">Categoria</div>
-          <select id="modal-category">
-            <!-- populated by UI.openModal() -->
-          </select>
+          <select id="modal-category"></select>
         </div>
 
       </div>
 
       <div class="modal-footer">
         <div class="modal-footer-left">
-          <button class="btn-ghost" id="modal-archive"><!-- archive --> Arquivar</button>
-          <button class="btn-danger" id="modal-delete"><!-- trash --> Excluir</button>
+          <button class="btn-ghost"   id="modal-archive"></button>
+          <button class="btn-danger"  id="modal-delete"></button>
         </div>
         <button class="btn-primary" id="modal-save">Salvar</button>
       </div>
@@ -159,13 +141,11 @@
 
       <div class="settings-header">
         <span class="settings-title">Configurações</span>
-        <button class="icon-btn" id="settings-close" aria-label="Fechar"><!-- close --></button>
+        <button class="icon-btn" id="settings-close" aria-label="Fechar"></button>
       </div>
 
-      <!-- Aparência -->
       <section class="settings-section">
         <div class="settings-section-title">Aparência</div>
-
         <div class="settings-row">
           <label for="settings-theme">Tema</label>
           <select id="settings-theme">
@@ -173,7 +153,6 @@
             <option value="light">Light</option>
           </select>
         </div>
-
         <div class="settings-row">
           <label for="settings-default-view">Visualização padrão</label>
           <select id="settings-default-view">
@@ -184,10 +163,8 @@
         </div>
       </section>
 
-      <!-- Comportamento -->
       <section class="settings-section">
         <div class="settings-section-title">Comportamento</div>
-
         <div class="settings-row">
           <label for="settings-fab">Botão "+"</label>
           <select id="settings-fab">
@@ -197,13 +174,11 @@
         </div>
       </section>
 
-      <!-- Categorias -->
       <section class="settings-section">
         <div class="settings-section-title">Categorias</div>
-        <div class="category-list" id="category-list">
-          <!-- rendered by UI.renderCategoryManager() -->
-        </div>
-        <button class="btn-ghost" id="btn-add-category" style="margin-top:8px;width:100%;justify-content:center">
+        <div class="category-list" id="category-list"></div>
+        <button class="btn-ghost" id="btn-add-category"
+          style="margin-top:8px;width:100%;justify-content:center">
           + Nova categoria
         </button>
       </section>
@@ -218,31 +193,27 @@
   <script src="db.js"></script>
   <script src="api.js"></script>
   <script src="ui.js"></script>
+  <script src="panorama.js"></script>
   <script src="app.js"></script>
 
-  <!-- Inject icons into static HTML elements after scripts load -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Search icon
-      document.querySelector('.search-icon').innerHTML = getIcon('search', 16);
-
-      // FAB
-      document.getElementById('fab').innerHTML = getIcon('plus', 24);
-
-      // Topbar buttons
+      document.querySelector('.search-icon').innerHTML      = getIcon('search', 16);
+      document.getElementById('fab').innerHTML              = getIcon('plus', 24);
       document.getElementById('btn-view-grid').innerHTML    = getIcon('grid', 18);
       document.getElementById('btn-view-list').innerHTML    = getIcon('list', 18);
       document.getElementById('btn-view-masonry').innerHTML = getIcon('masonry', 18);
+      document.getElementById('btn-view-panorama').innerHTML= getIcon('maximize', 18);
       document.getElementById('btn-zoom-out').innerHTML     = getIcon('zoom-out', 18);
       document.getElementById('btn-zoom-in').innerHTML      = getIcon('zoom-in', 18);
       document.getElementById('btn-archived').innerHTML     = getIcon('archive', 18);
       document.getElementById('btn-sync-icon').innerHTML    = getIcon('sync', 18);
       document.getElementById('btn-theme').innerHTML        = getIcon('sun', 18);
       document.getElementById('btn-settings').innerHTML     = getIcon('settings', 18);
-
-      // Modal / settings close buttons
-      document.getElementById('modal-close').innerHTML    = getIcon('close', 18);
-      document.getElementById('settings-close').innerHTML = getIcon('close', 18);
+      document.getElementById('modal-close').innerHTML      = getIcon('close', 18);
+      document.getElementById('settings-close').innerHTML   = getIcon('close', 18);
+      document.getElementById('modal-archive').innerHTML    = getIcon('archive', 16) + ' Arquivar';
+      document.getElementById('modal-delete').innerHTML     = getIcon('trash', 16)   + ' Excluir';
     });
   </script>
 

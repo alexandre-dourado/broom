@@ -334,6 +334,9 @@ function bindEvents() {
   document.getElementById('btn-view-list').addEventListener('click', () => setView('list'));
   document.getElementById('btn-view-masonry').addEventListener('click', () => setView('masonry'));
 
+  // Panorama
+  document.getElementById('btn-view-panorama').addEventListener('click', openPanorama);
+
   // Zoom
   document.getElementById('btn-zoom-in').addEventListener('click', () => setZoom(1));
   document.getElementById('btn-zoom-out').addEventListener('click', () => setZoom(-1));

@@ -17,6 +17,7 @@ const STATIC_FILES = [
   'api.js',
   'ui.js',
   'app.js',
+  'panorama.js',
   'manifest.json'
 ];
 
