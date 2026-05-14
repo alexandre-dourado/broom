@@ -48,7 +48,7 @@ const UI = {
   },
 
   createCard(item) {
-    const cat = getCategoryById(item.category);
+    const cat   = getCategoryById(item.category);
     const color = cat?.color || '#444';
     const icon  = cat?.icon  || 'circle';
 
@@ -68,8 +68,6 @@ const UI = {
     `;
 
     card.addEventListener('click', () => this.openModal(item));
-
-    // Drag-and-drop (pointer events — works on touch + mouse)
     this.initDrag(card, item);
 
     return card;
@@ -84,7 +82,6 @@ const UI = {
     const cards = [...container.querySelectorAll('.card')];
     if (!cards.length) return;
 
-    // Reset
     cards.forEach(c => { c.style.gridRow = ''; c.style.gridColumn = ''; });
 
     requestAnimationFrame(() => {
@@ -92,9 +89,8 @@ const UI = {
       const gap  = 12;
       const colHeights = Array(cols).fill(0);
 
-      cards.forEach((card, i) => {
+      cards.forEach(card => {
         const col = colHeights.indexOf(Math.min(...colHeights));
-        const row = Math.ceil(colHeights[col] / (gap + 10)) + 1;
         card.style.gridColumn = col + 1;
         card.style.gridRow    = `span ${Math.ceil((card.offsetHeight + gap) / (gap + 10))}`;
         colHeights[col] += card.offsetHeight + gap;
@@ -109,15 +105,11 @@ const UI = {
   applyView() {
     const grid = document.getElementById('grid');
     grid.dataset.view = STATE.view;
-    if (STATE.view === 'masonry') {
-      requestAnimationFrame(() => this.applyMasonry());
-    }
+    if (STATE.view === 'masonry') requestAnimationFrame(() => this.applyMasonry());
   },
 
   applyZoom() {
-    const grid = document.getElementById('grid');
-    grid.dataset.zoom = STATE.zoom;
-    // CSS handles columns + font size via data-zoom attribute
+    document.getElementById('grid').dataset.zoom = STATE.zoom;
   },
 
   updateViewButtons() {
@@ -144,12 +136,12 @@ const UI = {
 
   updateSyncIndicator() {
     const dot = document.getElementById('sync-dot');
-    const btn = document.getElementById('btn-sync');
     if (!dot) return;
     dot.className = 'sync-dot ' + (
       STATE.syncing ? 'syncing' :
       STATE.online  ? 'online'  : 'offline'
     );
+    const btn = document.getElementById('btn-sync');
     if (btn) btn.title = STATE.syncing ? 'Sincronizando...' : STATE.online ? 'Sincronizado' : 'Offline';
   },
 
@@ -162,13 +154,10 @@ const UI = {
     if (!bar) return;
 
     bar.innerHTML = `
-      <button class="filter-chip ${!STATE.filterCategory ? 'active' : ''}" data-cat="">
-        Tudo
-      </button>
+      <button class="filter-chip ${!STATE.filterCategory ? 'active' : ''}" data-cat="">Tudo</button>
       ${STATE.categories.map(cat => `
         <button class="filter-chip ${STATE.filterCategory === cat.id ? 'active' : ''}"
-          data-cat="${cat.id}"
-          style="--chip-color: ${cat.color}">
+          data-cat="${cat.id}" style="--chip-color:${cat.color}">
           <span class="chip-icon">${getIcon(cat.icon, 12)}</span>
           ${escapeHTML(cat.name)}
         </button>
@@ -185,41 +174,42 @@ const UI = {
   },
 
   // ============================================================
-  // MODAL
+  // MODAL — ADD / EDIT
   // ============================================================
 
   openModal(item) {
     STATE.editingItem = item;
     const overlay = document.getElementById('modal-overlay');
-    const title   = document.getElementById('modal-title');
-    const desc    = document.getElementById('modal-description');
+    const titleEl = document.getElementById('modal-title');
+    const descEl  = document.getElementById('modal-description');
     const catSel  = document.getElementById('modal-category');
     const archBtn = document.getElementById('modal-archive');
     const heading = document.getElementById('modal-heading');
 
-    // Populate category select
     catSel.innerHTML = STATE.categories.map(c => `
       <option value="${c.id}" ${item?.category === c.id ? 'selected' : ''}>${escapeHTML(c.name)}</option>
     `).join('');
 
     if (item) {
-      heading.textContent  = 'Editar item';
-      title.value          = item.title       || '';
-      desc.value           = item.description || '';
-      catSel.value         = item.category    || '';
-      archBtn.innerHTML    = item.archived ? getIcon('unarchive', 16) + ' Restaurar' : getIcon('archive', 16) + ' Arquivar';
+      heading.textContent = 'Editar item';
+      titleEl.value       = item.title       || '';
+      descEl.value        = item.description || '';
+      catSel.value        = item.category    || '';
+      archBtn.innerHTML   = item.archived
+        ? getIcon('unarchive', 16) + ' Restaurar'
+        : getIcon('archive', 16)  + ' Arquivar';
       document.getElementById('modal-delete').style.display = '';
     } else {
-      heading.textContent  = 'Novo item';
-      title.value          = '';
-      desc.value           = '';
-      catSel.value         = STATE.categories[0]?.id || '';
-      archBtn.innerHTML    = getIcon('archive', 16) + ' Arquivar';
+      heading.textContent = 'Novo item';
+      titleEl.value       = '';
+      descEl.value        = '';
+      catSel.value        = STATE.categories[0]?.id || '';
+      archBtn.innerHTML   = getIcon('archive', 16) + ' Arquivar';
       document.getElementById('modal-delete').style.display = 'none';
     }
 
     overlay.classList.add('open');
-    requestAnimationFrame(() => title.focus());
+    requestAnimationFrame(() => titleEl.focus());
   },
 
   closeModal() {
@@ -232,8 +222,7 @@ const UI = {
   // ============================================================
 
   showInstantCapture() {
-    const el = document.getElementById('instant-capture');
-    el.classList.add('open');
+    document.getElementById('instant-capture').classList.add('open');
     requestAnimationFrame(() => document.getElementById('instant-input').focus());
   },
 
@@ -247,14 +236,10 @@ const UI = {
   // ============================================================
 
   openSettings() {
-    const overlay = document.getElementById('settings-overlay');
-    overlay.classList.add('open');
-
-    // Populate current values
+    document.getElementById('settings-overlay').classList.add('open');
     document.getElementById('settings-theme').value        = STATE.theme;
     document.getElementById('settings-fab').value          = STATE.fabMode;
     document.getElementById('settings-default-view').value = STATE.view;
-
     UI.renderCategoryManager();
   },
 
@@ -278,7 +263,7 @@ const UI = {
     list.querySelectorAll('.cat-edit-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const cat = STATE.categories.find(c => c.id === btn.dataset.id);
-        if (cat) UI.showEditCategoryForm(cat);
+        if (cat) UI._showCategoryForm(cat);
       });
     });
 
@@ -291,68 +276,127 @@ const UI = {
     });
   },
 
-  showAddCategoryForm() {
-    UI._showCategoryForm(null);
-  },
+  showAddCategoryForm()    { UI._showCategoryForm(null); },
+  showEditCategoryForm(cat){ UI._showCategoryForm(cat);  },
 
-  showEditCategoryForm(cat) {
-    UI._showCategoryForm(cat);
-  },
+  // ============================================================
+  // CATEGORY FORM — com icon picker visual
+  // ============================================================
 
   _showCategoryForm(cat) {
     const existing = document.getElementById('cat-form-inline');
     if (existing) existing.remove();
 
+    let selectedIcon = cat?.icon || CATEGORY_ICON_KEYS[0];
+
     const form = document.createElement('div');
     form.id = 'cat-form-inline';
     form.className = 'cat-form';
+
     form.innerHTML = `
-      <input id="cat-form-name"  type="text"  placeholder="Nome" value="${cat ? escapeHTML(cat.name) : ''}" maxlength="30">
-      <input id="cat-form-color" type="color" value="${cat?.color || '#888888'}">
-      <select id="cat-form-icon">
+      <div class="cat-form-row">
+        <input id="cat-form-name" type="text" placeholder="Nome da categoria"
+          value="${cat ? escapeHTML(cat.name) : ''}" maxlength="30" autocomplete="off">
+        <label class="color-pick-wrap" title="Cor">
+          <input id="cat-form-color" type="color" value="${cat?.color || '#6C63FF'}">
+          <span id="cat-color-preview" class="color-preview"
+            style="background:${cat?.color || '#6C63FF'}"></span>
+        </label>
+      </div>
+
+      <div class="icon-picker-header">
+        <span class="icon-picker-label">Ícone</span>
+        <span class="icon-picker-preview" id="icon-picker-preview">
+          ${getIcon(selectedIcon, 16)}
+          <span class="icon-picker-name">${selectedIcon}</span>
+        </span>
+      </div>
+
+      <input id="icon-search" type="text" placeholder="Buscar ícone…"
+        class="icon-search-input" autocomplete="off" spellcheck="false">
+
+      <div class="icon-grid" id="icon-grid">
         ${CATEGORY_ICON_KEYS.map(k => `
-          <option value="${k}" ${cat?.icon === k ? 'selected' : ''}>${k}</option>
+          <button type="button" class="icon-cell${k === selectedIcon ? ' selected' : ''}"
+            data-icon="${k}" title="${k}">
+            ${getIcon(k, 20)}
+          </button>
         `).join('')}
-      </select>
+      </div>
+
       <div class="cat-form-actions">
-        <button id="cat-form-save" class="btn-primary">${cat ? 'Salvar' : 'Adicionar'}</button>
         <button id="cat-form-cancel" class="btn-ghost">Cancelar</button>
+        <button id="cat-form-save"   class="btn-primary">${cat ? 'Salvar' : 'Adicionar'}</button>
       </div>
     `;
 
     document.getElementById('category-list').after(form);
 
-    document.getElementById('cat-form-cancel').addEventListener('click', () => form.remove());
-    document.getElementById('cat-form-save').addEventListener('click', async () => {
-      const name  = document.getElementById('cat-form-name').value.trim();
-      const color = document.getElementById('cat-form-color').value;
-      const icon  = document.getElementById('cat-form-icon').value;
-      if (!name) return;
+    // color preview live update
+    const colorInput   = form.querySelector('#cat-form-color');
+    const colorPreview = form.querySelector('#cat-color-preview');
+    colorInput.addEventListener('input', e => {
+      colorPreview.style.background = e.target.value;
+    });
 
+    // icon selection
+    const iconGrid = form.querySelector('#icon-grid');
+
+    function selectIcon(key) {
+      selectedIcon = key;
+      iconGrid.querySelectorAll('.icon-cell').forEach(c => {
+        c.classList.toggle('selected', c.dataset.icon === key);
+      });
+      form.querySelector('#icon-picker-preview').innerHTML =
+        getIcon(key, 16) + `<span class="icon-picker-name">${key}</span>`;
+    }
+
+    iconGrid.addEventListener('click', e => {
+      const cell = e.target.closest('.icon-cell');
+      if (cell) selectIcon(cell.dataset.icon);
+    });
+
+    // search filter
+    form.querySelector('#icon-search').addEventListener('input', e => {
+      const q = e.target.value.toLowerCase().trim();
+      iconGrid.querySelectorAll('.icon-cell').forEach(cell => {
+        cell.style.display = (!q || cell.dataset.icon.includes(q)) ? '' : 'none';
+      });
+    });
+
+    // cancel
+    form.querySelector('#cat-form-cancel').addEventListener('click', () => form.remove());
+
+    // save
+    form.querySelector('#cat-form-save').addEventListener('click', async () => {
+      const name  = form.querySelector('#cat-form-name').value.trim();
+      const color = form.querySelector('#cat-form-color').value;
+      if (!name) { form.querySelector('#cat-form-name').focus(); return; }
       if (cat) {
-        await updateCategory(cat.id, { name, color, icon });
+        await updateCategory(cat.id, { name, color, icon: selectedIcon });
       } else {
-        await createCategory({ name, color, icon });
+        await createCategory({ name, color, icon: selectedIcon });
       }
       form.remove();
       UI.renderCategoryManager();
     });
+
+    requestAnimationFrame(() => form.querySelector('#cat-form-name').focus());
   },
 
   // ============================================================
-  // DRAG & DROP (pointer events — touch safe)
+  // DRAG & DROP (pointer events — touch + mouse)
   // ============================================================
 
   initDrag(card, item) {
-    let startX, startY, startEl, ghost, active = false;
+    let startX, startY, ghost, active = false, longPressTimer;
 
     card.addEventListener('pointerdown', e => {
       if (e.target.closest('button')) return;
       startX = e.clientX;
       startY = e.clientY;
-      startEl = card;
 
-      const longPress = setTimeout(() => {
+      longPressTimer = setTimeout(() => {
         active = true;
         card.setPointerCapture(e.pointerId);
         card.classList.add('dragging');
@@ -365,37 +409,50 @@ const UI = {
         document.body.appendChild(ghost);
       }, 350);
 
-      card.addEventListener('pointermove', e => {
+      const onMove = e => {
         if (!active) {
-          if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5) clearTimeout(longPress);
+          if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5) {
+            clearTimeout(longPressTimer);
+          }
           return;
         }
-        ghost.style.left = e.clientX - ghost.offsetWidth / 2 + 'px';
+        ghost.style.left = e.clientX - ghost.offsetWidth  / 2 + 'px';
         ghost.style.top  = e.clientY - ghost.offsetHeight / 2 + 'px';
 
-        // Find drop target
         ghost.style.display = 'none';
         const el = document.elementFromPoint(e.clientX, e.clientY)?.closest('.card');
         ghost.style.display = '';
 
         document.querySelectorAll('.card.drag-over').forEach(c => c.classList.remove('drag-over'));
         if (el && el !== card) el.classList.add('drag-over');
+      };
 
-      }, { passive: true });
-
-      card.addEventListener('pointerup', async e => {
-        clearTimeout(longPress);
+      const onUp = async e => {
+        clearTimeout(longPressTimer);
+        card.removeEventListener('pointermove', onMove);
         if (!active) return;
         active = false;
         card.classList.remove('dragging');
         ghost?.remove();
 
+        ghost.style.display = 'none';
         const target = document.elementFromPoint(e.clientX, e.clientY)?.closest('.card[data-id]');
+        ghost.style.display = '';
         document.querySelectorAll('.card.drag-over').forEach(c => c.classList.remove('drag-over'));
 
         if (target && target.dataset.id !== item.id) {
           await swapManualOrder(item.id, target.dataset.id);
         }
+      };
+
+      card.addEventListener('pointermove', onMove, { passive: true });
+      card.addEventListener('pointerup',   onUp,   { once: true });
+      card.addEventListener('pointercancel', () => {
+        clearTimeout(longPressTimer);
+        active = false;
+        card.classList.remove('dragging');
+        ghost?.remove();
+        document.querySelectorAll('.card.drag-over').forEach(c => c.classList.remove('drag-over'));
       }, { once: true });
     });
   }
@@ -423,10 +480,10 @@ async function swapManualOrder(idA, idB) {
 function escapeHTML(str) {
   if (!str) return '';
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g,  '&amp;')
+    .replace(/</g,  '&lt;')
+    .replace(/>/g,  '&gt;')
+    .replace(/"/g,  '&quot;');
 }
 
 function truncate(str, max) {
@@ -435,6 +492,5 @@ function truncate(str, max) {
 }
 
 function getZoomCols() {
-  const map = { 1: 2, 2: 3, 3: 4, 4: 5, 5: 6 };
-  return map[STATE.zoom] || 4;
+  return ({ 1:2, 2:3, 3:4, 4:5, 5:6 })[STATE.zoom] || 4;
 }
